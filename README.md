@@ -8,5 +8,5 @@ gcc -I"$JAVA_HOME/include" -I"$JAVA_HOME/include/darwin" -dynamiclib -o libsocke
 and as VM argument
 
 ```
--Djava.library.path=.../native-playground/src/main/java
+-Djava.library.path=.../native-playground/src/main/c
 ```
