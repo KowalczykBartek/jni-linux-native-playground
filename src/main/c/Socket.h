@@ -9,18 +9,26 @@ extern "C" {
 #endif
 /*
  * Class:     Socket
- * Method:    socket
+ * Method:    socket0
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_Socket_socket
+JNIEXPORT jint JNICALL Java_Socket_socket0
   (JNIEnv *, jobject);
 
 /*
  * Class:     Socket
- * Method:    connet
+ * Method:    connet0
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_Socket_connet
+JNIEXPORT jint JNICALL Java_Socket_connet0
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     Socket
+ * Method:    read0
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_Socket_read0
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus
