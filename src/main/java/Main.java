@@ -8,7 +8,10 @@ public class Main {
 
         while (true) {
             Thread.sleep(1000);
-            socket.write0(data);
+            int result = socket.write0(data);
+            if(result < 0) {
+                throw new RuntimeException("blah blah");
+            }
         }
     }
 }

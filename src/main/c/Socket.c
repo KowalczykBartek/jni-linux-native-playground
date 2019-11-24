@@ -7,56 +7,52 @@
 #include <arpa/inet.h>	//inet_addr
 
 JNIEXPORT jint JNICALL Java_Socket_socket0(JNIEnv *env, jobject obj) {
-	int socket_desc;
-	socket_desc = socket(AF_INET , SOCK_STREAM , 0);
+    int socket_desc;
+    socket_desc = socket(AF_INET , SOCK_STREAM , 0);
 
-	if (socket_desc == -1)
-	{
-		return socket_desc;
-	}
+    if (socket_desc == -1)
+    {
+    	return socket_desc;
+    }
 
-	jclass class_socket = (*env)->GetObjectClass(env, obj);
+    jclass class_socket = (*env)->GetObjectClass(env, obj);
     jfieldID fid = (*env)->GetFieldID(env, class_socket, "fd","I");
     (*env)->SetIntField(env, obj ,fid, socket_desc);
 
-	return 0;
+    return 0;
 }
 
 JNIEXPORT jint JNICALL Java_Socket_connet0(JNIEnv *env, jobject obj) {
+    jclass class_socket = (*env)->GetObjectClass(env, obj);
+    jfieldID portId = (*env)->GetFieldID(env, class_socket, "port", "I");
+    jint port = (*env)->GetIntField(env, obj, portId);
 
-	/* get the class */
-	jclass class_socket = (*env)->GetObjectClass(env, obj);
+    jfieldID fdiD = (*env)->GetFieldID(env, class_socket, "fd", "I");
+    jint socketFd = (*env)->GetIntField(env, obj, fdiD);
 
-	jfieldID portId = (*env)->GetFieldID(env, class_socket, "port", "I");
-	jint port = (*env)->GetIntField(env, obj, portId);
+    // get field
+    jfieldID byteArrayField = (*env)->GetFieldID(env, class_socket, "host", "[B");
+    jbyteArray byteArray = (*env)->GetObjectField(env, obj, byteArrayField);
 
-	jfieldID fdiD = (*env)->GetFieldID(env, class_socket, "fd", "I");
-	jint socketFd = (*env)->GetIntField(env, obj, fdiD);
+    jbyte *host = (*env)->GetByteArrayElements(env, byteArray, 0);
+    jint hostPathLen = (*env)->GetArrayLength(env, byteArray);
 
-	// get field
-	jfieldID byteArrayField = (*env)->GetFieldID(env, class_socket, "host", "[B");
-	jbyteArray byteArray = (*env)->GetObjectField(env, obj, byteArrayField);
+    // connet socket
+    struct sockaddr_in server;
+    server.sin_addr.s_addr = inet_addr(host);
+    server.sin_family = AF_INET;
+    server.sin_port = htons(port);
 
-	jbyte *host = (*env)->GetByteArrayElements(env, byteArray, 0);
-	jint hostPathLen = (*env)->GetArrayLength(env, byteArray);
+    //Connect to remote server
+    if (connect(socketFd , (struct sockaddr *)&server , sizeof(server)) < 0)
+    {
+    	return -1;
+    }
 
-	// connet socket
-	struct sockaddr_in server;
-	server.sin_addr.s_addr = inet_addr(host);
-	server.sin_family = AF_INET;
-	server.sin_port = htons(port);
-
-	//Connect to remote server
-	if (connect(socketFd , (struct sockaddr *)&server , sizeof(server)) < 0)
-	{
-		return -1;
-	}
-
-	return 0;
+    return 0;
 }
 
 JNIEXPORT jbyteArray JNICALL Java_Socket_read0(JNIEnv *env, jobject obj) {
-
     jclass class_socket = (*env)->GetObjectClass(env, obj);
     jfieldID fdiD = (*env)->GetFieldID(env, class_socket, "fd", "I");
     jint socketFd = (*env)->GetIntField(env, obj, fdiD);
@@ -85,13 +81,12 @@ JNIEXPORT jbyteArray JNICALL Java_Socket_read0(JNIEnv *env, jobject obj) {
 }
 
 JNIEXPORT jint JNICALL Java_Socket_write0(JNIEnv *env, jobject obj, jbyteArray dataArray) {
-
     jclass class_socket = (*env)->GetObjectClass(env, obj);
     jfieldID fdiD = (*env)->GetFieldID(env, class_socket, "fd", "I");
     jint socketFd = (*env)->GetIntField(env, obj, fdiD);
 
-	jbyte *data = (*env)->GetByteArrayElements(env, dataArray, 0);
-	jint dataLength = (*env)->GetArrayLength(env, dataArray);
+    jbyte *data = (*env)->GetByteArrayElements(env, dataArray, 0);
+    jint dataLength = (*env)->GetArrayLength(env, dataArray);
 
     if(send(socketFd , data , dataLength, 0) < 0)
     {
