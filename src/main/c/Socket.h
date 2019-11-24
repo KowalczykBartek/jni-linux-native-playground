@@ -31,6 +31,14 @@ JNIEXPORT jint JNICALL Java_Socket_connet0
 JNIEXPORT jbyteArray JNICALL Java_Socket_read0
   (JNIEnv *, jobject);
 
+/*
+ * Class:     Socket
+ * Method:    write0
+ * Signature: ([B)I
+ */
+JNIEXPORT jint JNICALL Java_Socket_write0
+  (JNIEnv *, jobject, jbyteArray);
+
 #ifdef __cplusplus
 }
 #endif

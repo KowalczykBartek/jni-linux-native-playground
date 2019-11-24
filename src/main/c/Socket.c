@@ -12,11 +12,8 @@ JNIEXPORT jint JNICALL Java_Socket_socket0(JNIEnv *env, jobject obj) {
 
 	if (socket_desc == -1)
 	{
-		printf("[NATIVE] Could not create socket\n");
 		return socket_desc;
 	}
-
-    printf("[NATIVE] socket's fd received %d \n", socket_desc);
 
 	jclass class_socket = (*env)->GetObjectClass(env, obj);
     jfieldID fid = (*env)->GetFieldID(env, class_socket, "fd","I");
@@ -43,8 +40,6 @@ JNIEXPORT jint JNICALL Java_Socket_connet0(JNIEnv *env, jobject obj) {
 	jbyte *host = (*env)->GetByteArrayElements(env, byteArray, 0);
 	jint hostPathLen = (*env)->GetArrayLength(env, byteArray);
 
-	printf("[NATIVE] connecting to %d %d %s \n", port, hostPathLen, host);
-
 	// connet socket
 	struct sockaddr_in server;
 	server.sin_addr.s_addr = inet_addr(host);
@@ -54,7 +49,6 @@ JNIEXPORT jint JNICALL Java_Socket_connet0(JNIEnv *env, jobject obj) {
 	//Connect to remote server
 	if (connect(socketFd , (struct sockaddr *)&server , sizeof(server)) < 0)
 	{
-		printf("[NATIVE] connect error\n");
 		return -1;
 	}
 
@@ -63,33 +57,46 @@ JNIEXPORT jint JNICALL Java_Socket_connet0(JNIEnv *env, jobject obj) {
 
 JNIEXPORT jbyteArray JNICALL Java_Socket_read0(JNIEnv *env, jobject obj) {
 
-	jclass class_socket = (*env)->GetObjectClass(env, obj);
-	jfieldID fdiD = (*env)->GetFieldID(env, class_socket, "fd", "I");
-	jint socketFd = (*env)->GetIntField(env, obj, fdiD);
+    jclass class_socket = (*env)->GetObjectClass(env, obj);
+    jfieldID fdiD = (*env)->GetFieldID(env, class_socket, "fd", "I");
+    jint socketFd = (*env)->GetIntField(env, obj, fdiD);
 
     char onStackData[2000];
     int recvData = recv(socketFd, onStackData , 2000 , 0);
     if(recvData < 0)
-	{
-		printf("[NATIVE]recv failed\n");
-	}
-
+    {
+    	return NULL;
+    }
 
     jbyteArray data = (*env)->NewByteArray(env, recvData);
     if (data == NULL) {
-        return NULL; //  out of memory error thrown
+        return NULL;
     }
 
-    // creat bytes from byteUrl
     jbyte *bytes = (*env)->GetByteArrayElements(env, data, 0);
     int i;
     for (i = 0; i < recvData; i++) {
         bytes[i] = onStackData[i];
     }
 
-    // move from the temp structure to the java structure
     (*env)->SetByteArrayRegion(env, data, 0, recvData, bytes);
 
     return data;
+}
 
+JNIEXPORT jint JNICALL Java_Socket_write0(JNIEnv *env, jobject obj, jbyteArray dataArray) {
+
+    jclass class_socket = (*env)->GetObjectClass(env, obj);
+    jfieldID fdiD = (*env)->GetFieldID(env, class_socket, "fd", "I");
+    jint socketFd = (*env)->GetIntField(env, obj, fdiD);
+
+	jbyte *data = (*env)->GetByteArrayElements(env, dataArray, 0);
+	jint dataLength = (*env)->GetArrayLength(env, dataArray);
+
+    if(send(socketFd , data , dataLength, 0) < 0)
+    {
+    	return -1;
+    }
+
+	return 1;
 }

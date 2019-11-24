@@ -3,10 +3,12 @@ public class Main {
         Socket socket = Socket.of("127.0.0.1", 8080);
         socket.connect();
 
+        byte[] data = socket.read0();
+        System.out.println(new String(data));
+
         while (true) {
-            byte[] data = socket.read0();
-            System.out.println(new String(data));
             Thread.sleep(1000);
+            socket.write0(data);
         }
     }
 }

@@ -46,14 +46,19 @@ public class Socket {
      */
     private native int socket0();
 
+
+    /*
+     * Native section, 0 suffix means last, most internal method in the chain.
+     */
+
     /**
      * call os's connect(fd) syscall to make tcp connection.
      *
      * @return result of connect() syscall
      */
     private native int connet0();
-
     public native byte[] read0();
+    public native int write0(byte[] data);
 
     public int getPort() {
         return fd;
