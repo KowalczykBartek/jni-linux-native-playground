@@ -11,6 +11,28 @@ repositories {
     mavenCentral()
 }
 
+task tuntapExample(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'native testing',
+                'Implementation-Version': version,
+                'Main-Class': 'TunTapTest'
+    }
+    baseName = project.name + '-tuntap'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task socketExample(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'native testing',
+                'Implementation-Version': version,
+                'Main-Class': 'SocketTest'
+    }
+    baseName = project.name + '-socket'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

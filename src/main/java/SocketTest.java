@@ -1,4 +1,4 @@
-public class Main {
+public class SocketTest {
     public static void main(String[] args) throws InterruptedException {
         Socket socket = Socket.of("127.0.0.1", 8080);
         socket.connect();
