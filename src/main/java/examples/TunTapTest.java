@@ -1,3 +1,7 @@
+package examples;
+
+import linux.TunTap;
+
 public class TunTapTest {
     public static void main(String... args) throws InterruptedException {
         TunTap tunTap = new TunTap();

@@ -1,3 +1,5 @@
+package generic;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -83,7 +85,7 @@ public class Socket {
 
     @Override
     public String toString() {
-        return "Socket{" +
+        return "generic.Socket{" +
                 "host=" + Arrays.toString(host) +
                 ", port=" + port +
                 ", fd=" + fd +

@@ -3,7 +3,7 @@ I always wanted to make some JNI !
 ## socket example
 
 ```
-gcc -fPIC -I"$JAVA_HOME/include" -I"$JAVA_HOME/include/linux" -shared -o src/main/c/libsocket.so src/main/c/Socket.c
+gcc -fPIC -I"$JAVA_HOME/include" -I"$JAVA_HOME/include/linux" -shared -o src/main/c/libsocket.so src/main/c/generic.Socket.c
 ./gradlew socketExample
 
 sudo $JAVA_HOME/bin/java -Djava.library.path=./src/main/c -jar build/libs/native-playground-socket-1.0-SNAPSHOT.jar
@@ -12,7 +12,7 @@ sudo $JAVA_HOME/bin/java -Djava.library.path=./src/main/c -jar build/libs/native
 ## tun/tap example
 In order to run tun/tap example you need to perform following steps (you need linux :/ ):
 ```
-gcc -fPIC -I"$JAVA_HOME/include" -I"$JAVA_HOME/include/linux" -shared -o src/main/c/libtuntap.so src/main/c/TunTap.c
+gcc -fPIC -I"$JAVA_HOME/include" -I"$JAVA_HOME/include/linux" -shared -o src/main/c/libtuntap.so src/main/c/linux.TunTap.c
 
 ./gradlew tuntapExample
 
